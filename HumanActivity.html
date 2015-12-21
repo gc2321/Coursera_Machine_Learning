@@ -103,7 +103,7 @@ train2 = training2[-inTrain,]</code></pre>
 </div>
 <div id="building-a-model" class="section level3">
 <h3>Building a model</h3>
-<p>I will use random forest model with the {caret} package, using train1 as training data. I use 5-fold cross validation, and set the number of tress to be 250.</p>
+<p>I will use random forest model with the {caret} package, using train1 as training data. I use 5-fold cross validation, and set the number of trees to be 250.</p>
 <pre class="r"><code>rf &lt;- train(classe ~.,method=&quot;rf&quot;, data=train1, trControl=trainControl(method=&quot;cv&quot;, 5), ntree=250)
 rf</code></pre>
 <pre><code>## Random Forest 
@@ -126,38 +126,42 @@ rf</code></pre>
 ## The final value used for the model was mtry = 27.</code></pre>
 <p>To determine accuracy of this model, I test this against train2 data set.</p>
 <pre class="r"><code>confusionMatrix(train2[,53], predict(rf, newdata=train2[,-53]))</code></pre>
+<pre><code>## Loading required package: randomForest</code></pre>
+<pre><code>## Warning: package 'randomForest' was built under R version 3.2.3</code></pre>
+<pre><code>## randomForest 4.6-12
+## Type rfNews() to see new features/changes/bug fixes.</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
 ##          A 1395    0    0    0    0
-##          B    8  941    0    0    0
+##          B    1  948    0    0    0
 ##          C    0    0  855    0    0
-##          D    0    0    7  796    1
-##          E    0    0    3    2  896
+##          D    0    0    3  801    0
+##          E    0    0    1    1  899
 ## 
 ## Overall Statistics
 ##                                           
-##                Accuracy : 0.9957          
-##                  95% CI : (0.9935, 0.9973)
-##     No Information Rate : 0.2861          
+##                Accuracy : 0.9988          
+##                  95% CI : (0.9973, 0.9996)
+##     No Information Rate : 0.2847          
 ##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
 ##                                           
-##                   Kappa : 0.9946          
+##                   Kappa : 0.9985          
 ##  Mcnemar's Test P-Value : NA              
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            0.9943   1.0000   0.9884   0.9975   0.9989
-## Specificity            1.0000   0.9980   1.0000   0.9981   0.9988
-## Pos Pred Value         1.0000   0.9916   1.0000   0.9900   0.9945
-## Neg Pred Value         0.9977   1.0000   0.9975   0.9995   0.9998
-## Prevalence             0.2861   0.1919   0.1764   0.1627   0.1829
-## Detection Rate         0.2845   0.1919   0.1743   0.1623   0.1827
+## Sensitivity            0.9993   1.0000   0.9953   0.9988   1.0000
+## Specificity            1.0000   0.9997   1.0000   0.9993   0.9995
+## Pos Pred Value         1.0000   0.9989   1.0000   0.9963   0.9978
+## Neg Pred Value         0.9997   1.0000   0.9990   0.9998   1.0000
+## Prevalence             0.2847   0.1933   0.1752   0.1635   0.1833
+## Detection Rate         0.2845   0.1933   0.1743   0.1633   0.1833
 ## Detection Prevalence   0.2845   0.1935   0.1743   0.1639   0.1837
-## Balanced Accuracy      0.9971   0.9990   0.9942   0.9978   0.9988</code></pre>
-<p>As show above, the accuracy is 0.9925, and therefore, I expect the out-of-sample error to be ~0.75%.</p>
+## Balanced Accuracy      0.9996   0.9999   0.9977   0.9990   0.9998</code></pre>
+<p>As show above, the accuracy is &gt;0.99, and therefore, I expect the out-of-sample error to be &lt;1%.</p>
 </div>
 <div id="predicting-test-data-and-output-files-for-each-data" class="section level3">
 <h3>Predicting test data and output files for each data</h3>
@@ -166,6 +170,7 @@ rf</code></pre>
 pred</code></pre>
 <pre><code>##  [1] B A B A A E D B A A B C B A E E A B B B
 ## Levels: A B C D E</code></pre>
+<p>Output files for grading.</p>
 <pre class="r"><code>answers = pred
 pml_write_files = function(x){
      n = length(x)

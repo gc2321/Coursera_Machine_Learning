@@ -108,33 +108,33 @@ confusionMatrix(train2[,53], predict(rf, newdata=train2[,-53]))
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 1394    0    1    0    0
-##          B    9  938    2    0    0
-##          C    0   20  833    2    0
-##          D    0    0    9  795    0
+##          A 1395    0    0    0    0
+##          B    3  946    0    0    0
+##          C    0    5  849    1    0
+##          D    0    0    3  801    0
 ##          E    0    0    0    1  900
 ## 
 ## Overall Statistics
-##                                          
-##                Accuracy : 0.991          
-##                  95% CI : (0.988, 0.9935)
-##     No Information Rate : 0.2861         
-##     P-Value [Acc > NIR] : < 2.2e-16      
-##                                          
-##                   Kappa : 0.9886         
-##  Mcnemar's Test P-Value : NA             
+##                                           
+##                Accuracy : 0.9973          
+##                  95% CI : (0.9955, 0.9986)
+##     No Information Rate : 0.2851          
+##     P-Value [Acc > NIR] : < 2.2e-16       
+##                                           
+##                   Kappa : 0.9966          
+##  Mcnemar's Test P-Value : NA              
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            0.9936   0.9791   0.9858   0.9962   1.0000
-## Specificity            0.9997   0.9972   0.9946   0.9978   0.9998
-## Pos Pred Value         0.9993   0.9884   0.9743   0.9888   0.9989
-## Neg Pred Value         0.9974   0.9949   0.9970   0.9993   1.0000
-## Prevalence             0.2861   0.1954   0.1723   0.1627   0.1835
-## Detection Rate         0.2843   0.1913   0.1699   0.1621   0.1835
+## Sensitivity            0.9979   0.9947   0.9965   0.9975   1.0000
+## Specificity            1.0000   0.9992   0.9985   0.9993   0.9998
+## Pos Pred Value         1.0000   0.9968   0.9930   0.9963   0.9989
+## Neg Pred Value         0.9991   0.9987   0.9993   0.9995   1.0000
+## Prevalence             0.2851   0.1939   0.1737   0.1637   0.1835
+## Detection Rate         0.2845   0.1929   0.1731   0.1633   0.1835
 ## Detection Prevalence   0.2845   0.1935   0.1743   0.1639   0.1837
-## Balanced Accuracy      0.9966   0.9882   0.9902   0.9970   0.9999
+## Balanced Accuracy      0.9989   0.9970   0.9975   0.9984   0.9999
 ```
 
 As show above, the accuracy is >0.99, and therefore, I expect the out-of-sample error to be <1%.
@@ -154,7 +154,7 @@ pred
 ## Levels: A B C D E
 ```
 
-Out files for grading.
+Output files for grading.
 
 
 ```r

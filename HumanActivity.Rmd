@@ -85,7 +85,7 @@ pred <- predict(rf, testing)
 pred
 ```
 
-Out files for grading.
+Output files for grading.
 
 ```{r}
 answers = pred
