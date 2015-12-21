@@ -1,0 +1,103 @@
+---
+title: "Practical Machine Learning Course Project"
+output: html_document
+---
+##Human Activity Recognition
+
+###Background
+
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here: http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset). 
+
+In this project, I will use a set of training data to establish machine learning algorithm. This will be used to predict the manner in which exercise was performed in 20 set of new data (test data).
+
+###Loading data 
+
+```{r, warning=FALSE, message=FALSE}
+library(caret)
+training <- read.csv("pml-training.csv")
+testing <- read.csv("pml-testing.csv")
+```
+
+###Cleaning data
+
+Remove all columns with NA values.
+```{r}
+training <- training[, colSums(is.na(training))==0]
+testing <- testing[, colSums(is.na(testing))==0]
+```
+
+Remove columns x, user_name, timestamps, and in testing data, also remove problem_id column
+
+```{r}
+training <- training[,-c(1,2,3,4,5,6,7)]
+testing <- testing[,-c(1,2,3,4,5,6,7,60)]
+```
+
+Remove from training set all columns with NA values in test data set. Add back the column "classe"
+
+```{r}
+training2 <- training[, names(testing)]
+training2[,"classe"] <- training$classe
+```
+
+Convert all "factor"" data to "numeric" type
+
+```{r}
+indx <- sapply(training2[,-53], is.factor)
+training2[indx] <- lapply(training2[indx], function(x) as.numeric(as.factor(x)))
+indx2 <- sapply(testing, is.factor)
+testing[indx2] <- lapply(testing[indx2], function(x) as.numeric(as.factor(x)))
+```
+
+###Data partition
+
+To evaluate out-of-sample error, I divided training data into two subsets, train1 and train2, at 75% and 25%, respectively. I expect the out-of-sample error to be low, since the training data set is relatively large.
+
+```{r}
+inTrain <- createDataPartition(training2$classe, p=0.75, list=FALSE)
+train1 = training2[inTrain,]
+train2 = training2[-inTrain,]
+```
+
+###Building a model
+
+I will use random forest model with the {caret} package, using train1 as training data. I use 5-fold cross validation, and set the number of trees to be 250.
+
+```{r,  warning=FALSE, message=FALSE, cache=TRUE}
+rf <- train(classe ~.,method="rf", data=train1, trControl=trainControl(method="cv", 5), ntree=250)
+rf
+```
+
+To determine accuracy of this model, I test this against train2 data set.
+
+```{r}
+confusionMatrix(train2[,53], predict(rf, newdata=train2[,-53]))
+```
+
+As show above, the accuracy is >0.99, and therefore, I expect the out-of-sample error to be <1%.
+
+###Predicting test data and output files for each data
+
+I use this model to predict the test data.
+
+```{r}
+pred <- predict(rf, testing)	
+pred
+```
+
+Out files for grading.
+
+```{r}
+answers = pred
+pml_write_files = function(x){
+     n = length(x)
+     for(i in 1:n){
+         filename = paste0("problem_id_",i,".txt")
+         write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+     }
+}
+pml_write_files(answers)
+```
+
+
+All of the prediction are correct.
